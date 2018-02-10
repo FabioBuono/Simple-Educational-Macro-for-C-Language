@@ -3,11 +3,11 @@
 #ifndef MACRO_H
 #define MACRO_H
 
-#include <stdio.h>  /* serve per la perror */
-#include <stdlib.h> /* serve per la exit   */
-#include <string.h> /* serve per strlen    */
-#include <errno.h>  /* serve per errno     */
-#include <unistd.h> /* serve per la write  */
+#include <stdio.h>  
+#include <stdlib.h> 
+#include <string.h> 
+#include <errno.h>  
+#include <unistd.h> 
 
 
 #define STDIN  0
@@ -20,32 +20,31 @@
 #define WRITE(m) IFERROR(write(STDOUT,m,strlen(m)), m);
 #define WRITELN(m) WRITE(m);WRITE("\n");
 
-/* WHENERROR serve a stampare errori che non richiedono la chiusura dell'applicazione */
+/* WHENERROR for critical error */
 #define WHENERROR(c) do{ if((c)<0){ printf("Errore in [ %s : %d]\n",__FILE__,__LINE__); }} while(0)
 
-/* SIGERROR serve a stampare errori critici relativi alla gestione dei segnali */
+/* SIGERROR for signal related critical error */
 #define SIGERROR(c, a) do{ if((c)<0){ printf("Errore in [%s : %d] gestendo ",__FILE__,__LINE__); printf(a);\
 kill(0,SIGKILL);}}while(0)
 
-/* Stampa gli errori durate una chiamata a Fork() */
+/* for error in a fork */
 #define WHENFORK(c) do{ if((c)<0){ printf("Errore in [%s : %d] tentando una fork ",__FILE__,__LINE__);\
 kill(0,SIGKILL);}}while(0)
 
-/* TRACE si comporta come SIGERROR, ma relativi ad errori critici generici */
+/* TRACE critical error */
 #define TRACE(a) do{printf ("TRACE : %s - %u\n", __FILE__, __LINE__); printf (a); fflush (stdout);\
 kill(0, SIGKILL);}while(0)
 
-/* Tre esempi con diverse implementazioni */
+/* Three Array Lenght example */
 #define ArrayLen(array) (sizeof(array)/sizeof(array[0]))
 #define ArrayLength(array) (sizeof(array) / sizeof (array[0]))
 #define ArrayL(array) (sizeof(array) / sizeof(*array))
 
-/* Accesso diretto alla memoria - Esempio per indirizzo $122: addr(0x0122) = 1; 
+/* direct memory access $122: addr(0x0122) = 1; */
 #define SetAddr(_ind) (*(unsigned char*) (_ind))
 
+/* move an element */
 #define MoveTo(i, n) for((i) = 0; (i) < (n); (i)++)
-
-#define PI 3.14
 
 /* Autoesplicative */
 #define MIN(a, b)   ((a)>(b)?(b):(a))
@@ -59,11 +58,11 @@ kill(0, SIGKILL);}while(0)
 #define COMPARE(x, y) (((x) > (y)) - ((x) < (y)))
 #define SIGN(x) COMPARE(x, 0)
 
-/* Swap parametrico nel tipo Esempio: SWAP(a,b int) */
-#define SCAMBIA(a, b, Type) do { Type temp = (a); (a) = (b); (b) = temp; } while(0)
+/* swp parameters SWAP(a,b int) */
+#define swap(a, b, Type) do { Type temp = (a); (a) = (b); (b) = temp; } while(0)
 
-/* Sort parametrico nel tipo */
-#define SORTYPE(a, b, T) do { if ((a) > (b)) SCAMBIA((a), (b), T); } while (0)
+/*  parametric Sort */
+#define SORTYPE(a, b, T) do { if ((a) > (b)) swap((a), (b), T); } while (0)
 
 #define SET_TO(a, b, c) do{ size_t i_, b_; for (b_ = (b), i_ = 0; b_ > 0; --b_, ++i_) (a)[i_] = (c); } while(0)
 #define SET_TO_ZERO(a, b) SET_TO(a, b, 0)
